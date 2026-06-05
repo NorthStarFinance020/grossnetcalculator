@@ -1,0 +1,299 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px}
+.sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.1rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.field{margin-bottom:12px}
+label{display:block;font-size:13px;color:var(--color-text-secondary);margin-bottom:5px}
+input[type=number]{width:100%;height:36px;padding:0 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:14px}
+.toggle-row{display:flex;gap:6px;flex-wrap:wrap}
+.tog{padding:5px 16px;font-size:13px;border:1.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;transition:background .12s,color .12s,border-color .12s,transform .1s;user-select:none;font-weight:400}
+.tog:hover{border-color:var(--color-border-primary);color:var(--color-text-primary)}
+.tog:active{transform:scale(0.95)}
+.tog.active{background:#1a56db;color:#fff;border-color:#1a56db;font-weight:500}
+.year-switch{display:flex;gap:0;margin-bottom:1.1rem;border:1.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);overflow:hidden;width:fit-content}
+.yr-btn{padding:7px 22px;font-size:14px;font-weight:500;border:none;background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;transition:background .12s,color .12s,transform .1s;user-select:none}
+.yr-btn:active{transform:scale(0.97)}
+.yr-btn.active{background:#1a56db;color:#fff}
+.result-num{font-size:26px;font-weight:500;color:var(--color-text-primary)}
+.result-label{font-size:12px;color:var(--color-text-secondary);margin-top:3px}
+.metric{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.7rem .9rem}
+.m-val{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.m-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.breakdown{margin-top:1rem}
+.row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+.row:last-child{border-bottom:none}
+.row .lbl{color:var(--color-text-secondary)}
+.row .val{font-weight:500;color:var(--color-text-primary)}
+.row.neg .val{color:var(--color-text-danger)}
+.row.pos .val{color:var(--color-text-success)}
+.row.total{font-size:15px;font-weight:500;padding-top:10px;margin-top:4px;border-top:1px solid var(--color-border-primary);border-bottom:none}
+.bar-wrap{margin-top:1rem}
+.bar-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--color-text-secondary);margin-bottom:6px}
+.bar-track{height:10px;border-radius:99px;background:var(--color-background-secondary);overflow:hidden;display:flex}
+.seg-netto{height:100%;background:#1D9E75;border-radius:99px 0 0 99px;transition:.4s}
+.seg-exfree{height:100%;background:#7F77DD;transition:.4s}
+.seg-tax{height:100%;background:#D85A30;border-radius:0 99px 99px 0;transition:.4s}
+.legend{display:flex;gap:12px;margin-top:7px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.dot{width:8px;height:8px;border-radius:50%}
+.section-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin:1rem 0 .6rem}
+.year-badge{display:inline-block;padding:2px 8px;font-size:11px;font-weight:500;border-radius:var(--border-radius-md);background:#1a56db;color:#fff;margin-left:6px;vertical-align:middle}
+.diff-pill{font-size:11px;padding:1px 6px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.diff-up{background:var(--color-background-success);color:var(--color-text-success)}
+.diff-dn{background:var(--color-background-danger);color:var(--color-text-danger)}
+.expat-box{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;margin-top:4px;background:var(--color-background-secondary)}
+.expat-saving{display:flex;align-items:baseline;gap:8px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--color-border-tertiary)}
+.expat-saving .big{font-size:20px;font-weight:500;color:#7F77DD}
+.expat-saving .sm{font-size:12px;color:var(--color-text-secondary)}
+.warn-box{font-size:12px;color:var(--color-text-warning);background:var(--color-background-warning);border-radius:var(--border-radius-md);padding:7px 10px;margin-top:8px;display:none}
+.empty-state{font-size:13px;color:var(--color-text-tertiary);text-align:center;padding:2rem 1rem}
+.note{font-size:11px;color:var(--color-text-tertiary);margin-top:.9rem;line-height:1.5}
+</style>
+
+<div style="padding:1.5rem 0">
+<h2>Gross → net salary <span class="year-badge" id="year-badge">2025</span></h2>
+<p class="sub">Netherlands — income tax calculation for employees</p>
+
+<div class="year-switch">
+  <button class="yr-btn active" onclick="setYear(2025,this)">2025</button>
+  <button class="yr-btn" onclick="setYear(2026,this)">2026</button>
+</div>
+
+<div class="grid2">
+<div class="card">
+  <div class="section-title">Input</div>
+
+  <div class="field">
+    <label>Gross salary</label>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input type="number" id="salary" value="" placeholder="Enter your gross salary" min="0" max="999999" step="100" style="flex:1">
+      <div class="toggle-row">
+        <button class="tog active" data-period="year" onclick="setPeriod('year',this)">Year</button>
+        <button class="tog" data-period="month" onclick="setPeriod('month',this)">Month</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>30% expat ruling</label>
+    <div class="toggle-row">
+      <button class="tog" data-expat="1" onclick="setExpat(1,this)">Yes</button>
+      <button class="tog active" data-expat="0" onclick="setExpat(0,this)">No</button>
+    </div>
+    <div id="expat-opts" style="display:none;margin-top:8px">
+      <div class="expat-box">
+        <div class="field" style="margin-bottom:8px">
+          <label>Under 30 with master's degree</label>
+          <div class="toggle-row">
+            <button class="tog" data-u30="1" onclick="setU30(1,this)">Yes</button>
+            <button class="tog active" data-u30="0" onclick="setU30(0,this)">No</button>
+          </div>
+        </div>
+        <div id="expat-warn" class="warn-box"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Salary may not meet the minimum threshold for the 30% ruling.</div>
+        <div id="expat-wnt-warn" class="warn-box" style="margin-top:4px"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Salary exceeds the WNT cap. The 30% ruling does not apply above this amount.</div>
+        <div class="expat-saving">
+          <span class="big" id="expat-save-yr">—</span>
+          <span class="sm">tax benefit per year</span>
+        </div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-top:4px">Tax-free amount: <span id="expat-free-amt" style="font-weight:500;color:var(--color-text-primary)">—</span> / year</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>AOW state pension age reached</label>
+    <div class="toggle-row">
+      <button class="tog" data-aow="1" onclick="setAOW(1,this)">Yes</button>
+      <button class="tog active" data-aow="0" onclick="setAOW(0,this)">No</button>
+    </div>
+  </div>
+
+  <div class="field" style="margin-bottom:0">
+    <label>Holiday allowance (8%) included</label>
+    <div class="toggle-row">
+      <button class="tog active" data-vg="1" onclick="setVG(1,this)">Yes</button>
+      <button class="tog" data-vg="0" onclick="setVG(0,this)">No (add 8%)</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-title">Result</div>
+  <div id="empty-state" class="empty-state">
+    <i class="ti ti-calculator" style="font-size:28px;display:block;margin-bottom:8px;opacity:.4" aria-hidden="true"></i>
+    Enter a gross salary to start the calculation
+  </div>
+  <div id="results" style="display:none">
+    <div style="margin-bottom:1rem">
+      <div class="result-num" id="netto-month">—</div>
+      <div class="result-label">Net per month <span id="diff-month" class="diff-pill" style="display:none"></span></div>
+    </div>
+    <div class="grid3">
+      <div class="metric">
+        <div class="m-val" id="m-netto-year">—</div>
+        <div class="m-lbl">Net / year <span id="diff-year" class="diff-pill" style="display:none"></span></div>
+      </div>
+      <div class="metric">
+        <div class="m-val" id="m-effectief">—</div>
+        <div class="m-lbl">Effective rate</div>
+      </div>
+      <div class="metric">
+        <div class="m-val" id="m-marginaal">—</div>
+        <div class="m-lbl">Marginal rate</div>
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <div class="row"><span class="lbl">Gross salary</span><span class="val" id="b-bruto">—</span></div>
+      <div class="row pos" id="row-exfree" style="display:none"><span class="lbl">30% ruling — tax-free portion</span><span class="val" id="b-exfree">—</span></div>
+      <div class="row"><span class="lbl">Taxable income</span><span class="val" id="b-fiscal">—</span></div>
+      <div class="row neg"><span class="lbl" id="lbl-tax1">Income tax bracket 1</span><span class="val" id="b-tax1">—</span></div>
+      <div class="row neg" id="row-tax2"><span class="lbl" id="lbl-tax2">Income tax bracket 2</span><span class="val" id="b-tax2">—</span></div>
+      <div class="row neg" id="row-tax3" style="display:none"><span class="lbl" id="lbl-tax3">Income tax bracket 3</span><span class="val" id="b-tax3">—</span></div>
+      <div class="row pos"><span class="lbl">General tax credit</span><span class="val" id="b-ahk">—</span></div>
+      <div class="row pos"><span class="lbl">Labour tax credit</span><span class="val" id="b-ak">—</span></div>
+      <div class="row pos" id="row-ok" style="display:none"><span class="lbl">Elderly tax credit</span><span class="val" id="b-ok">—</span></div>
+      <div class="row total"><span class="lbl">Net per year</span><span class="val" id="b-netto">—</span></div>
+    </div>
+
+    <div class="bar-wrap">
+      <div class="bar-lbl"><span>Gross breakdown</span><span id="bar-pct-lbl"></span></div>
+      <div class="bar-track">
+        <div class="seg-netto" id="bar-netto" style="width:0%"></div>
+        <div class="seg-exfree" id="bar-exfree" style="width:0%"></div>
+        <div class="seg-tax" id="bar-tax" style="width:0%"></div>
+      </div>
+      <div class="legend">
+        <div class="leg"><div class="dot" style="background:#1D9E75"></div>Net (taxed portion)</div>
+        <div class="leg" id="leg-exfree" style="display:none"><div class="dot" style="background:#7F77DD"></div>30% tax-free</div>
+        <div class="leg"><div class="dot" style="background:#D85A30"></div>Income tax</div>
+      </div>
+    </div>
+    <p class="note">Tax credits are applied automatically based on income. ZVW healthcare contribution is paid by the employer and not deducted here. Excludes pension contributions, which vary by employer. Indicative only — consult a tax advisor for your personal situation.</p>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+const RATES={
+  2025:{b1limit:38441,b2limit:75518,twoSchijven:true,rate1:0.3582,rate1aow:0.1792,rate2:null,rate2aow:null,rate3:0.4950,ahkMax:3068,ahkStart:28406,ahkPct:0.06935,ahkMaxAow:1532,ahkPctAow:0.03467,akMax:5599,akPhaseStart:43071,akPct:0.06510,akMaxAow:2840,akPctAow:0.03255,okMax:1949,okStart:42812,okPct:0.15,expatMinStd:45308,expatMinU30:34468,expatCap:246000,expatPct:0.30},
+  2026:{b1limit:38883,b2limit:78426,twoSchijven:false,rate1:0.3575,rate1aow:0.1785,rate2:0.3756,rate2aow:0.3756,rate3:0.4950,ahkMax:3115,ahkStart:29739,ahkPct:0.06398,ahkMaxAow:1556,ahkPctAow:0.03195,akMax:5685,akPhaseStart:45592,akPct:0.06510,akMaxAow:2840,akPctAow:0.03255,okMax:2067,okStart:46002,okPct:0.15,expatMinStd:48013,expatMinU30:36497,expatCap:262000,expatPct:0.30}
+};
+
+let taxYear=2025,period='year',aowAge=0,includeVG=1,useExpat=0,under30=0;
+let prevNetto=null,prevNettoM=null;
+
+function setYear(y,el){taxYear=y;document.querySelectorAll('.yr-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');document.getElementById('year-badge').textContent=y;calculate();}
+function setPeriod(p,el){period=p;document.querySelectorAll('[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===p));calculate();}
+function setAOW(v,el){aowAge=v;document.querySelectorAll('[data-aow]').forEach(b=>b.classList.toggle('active',b.dataset.aow===String(v)));calculate();}
+function setVG(v,el){includeVG=v;document.querySelectorAll('[data-vg]').forEach(b=>b.classList.toggle('active',b.dataset.vg===String(v)));calculate();}
+function setExpat(v,el){useExpat=v;document.querySelectorAll('[data-expat]').forEach(b=>b.classList.toggle('active',b.dataset.expat===String(v)));document.getElementById('expat-opts').style.display=v?'block':'none';calculate();}
+function setU30(v,el){under30=v;document.querySelectorAll('[data-u30]').forEach(b=>b.classList.toggle('active',b.dataset.u30===String(v)));calculate();}
+
+function fmt(n){return'€'+Math.round(n).toLocaleString('nl-NL');}
+function fmtpct(n){return n.toFixed(1)+'%';}
+
+function calcTax(f,r){
+  const r1=aowAge?r.rate1aow:r.rate1;
+  let t1,t2,t3;
+  if(r.twoSchijven){t1=Math.min(f,r.b1limit)*r1;t2=f>r.b1limit?(f-r.b1limit)*r.rate3:0;t3=0;}
+  else{const r2=aowAge?r.rate2aow:r.rate2;if(f<=r.b1limit){t1=f*r1;t2=0;t3=0;}else if(f<=r.b2limit){t1=r.b1limit*r1;t2=(f-r.b1limit)*r2;t3=0;}else{t1=r.b1limit*r1;t2=(r.b2limit-r.b1limit)*r2;t3=(f-r.b2limit)*r.rate3;}}
+  return{t1,t2,t3};
+}
+function calcAHK(i,r){const max=aowAge?r.ahkMaxAow:r.ahkMax,pct=aowAge?r.ahkPctAow:r.ahkPct;return i<=r.ahkStart?max:Math.max(0,max-(i-r.ahkStart)*pct);}
+function calcAK(i,r){const max=aowAge?r.akMaxAow:r.akMax,pct=aowAge?r.akPctAow:r.akPct;return i<=r.akPhaseStart?max:Math.max(0,max-(i-r.akPhaseStart)*pct);}
+function calcOK(i,r){if(!aowAge)return 0;return i<=r.okStart?r.okMax:Math.max(0,r.okMax-(i-r.okStart)*r.okPct);}
+
+function calculate(){
+  const raw=parseFloat(document.getElementById('salary').value);
+  const has=!isNaN(raw)&&raw>0;
+  document.getElementById('empty-state').style.display=has?'none':'block';
+  document.getElementById('results').style.display=has?'block':'none';
+  if(!has){prevNetto=null;prevNettoM=null;return;}
+
+  const r=RATES[taxYear];
+  let bruto=period==='month'?raw*12:raw;
+  if(!includeVG)bruto*=1.08;
+
+  // 30% ruling: 30% of gross is tax-free — reduces taxable base only, NOT take-home
+  // taxable = bruto * 0.70; employee still receives full bruto
+  const expatFree=useExpat?Math.min(bruto,r.expatCap)*r.expatPct:0;
+  const fiscaal=bruto-expatFree; // taxable income
+
+  if(useExpat){
+    const min=under30?r.expatMinU30:r.expatMinStd;
+    document.getElementById('expat-warn').style.display=fiscaal<min?'block':'none';
+    document.getElementById('expat-wnt-warn').style.display=bruto>r.expatCap?'block':'none';
+    document.getElementById('expat-free-amt').textContent=fmt(expatFree);
+    // tax saving = tax without ruling minus tax with ruling
+    const{t1:a1,t2:a2,t3:a3}=calcTax(bruto,r);
+    const savingWithout=Math.max(0,a1+a2+a3-calcAHK(bruto,r)-calcAK(bruto,r)-calcOK(bruto,r));
+    const{t1:b1,t2:b2,t3:b3}=calcTax(fiscaal,r);
+    const savingWith=Math.max(0,b1+b2+b3-calcAHK(fiscaal,r)-calcAK(fiscaal,r)-calcOK(fiscaal,r));
+    document.getElementById('expat-save-yr').textContent=fmt(savingWithout-savingWith);
+  }
+
+  const{t1,t2,t3}=calcTax(fiscaal,r);
+  const ahk=calcAHK(fiscaal,r),ak=calcAK(fiscaal,r),ok=calcOK(fiscaal,r);
+  const totalTax=Math.max(0,t1+t2+t3-ahk-ak-ok);
+
+  // KEY: netto = full bruto minus only the tax owed on the taxable portion
+  // the tax-free 30% is received in full — it is never deducted from take-home
+  const netto=bruto-totalTax;
+  const nettoM=netto/12;
+  const eff=bruto>0?(totalTax/bruto)*100:0;
+  const r1=aowAge?r.rate1aow:r.rate1;
+  const marg=r.twoSchijven?(fiscaal>r.b1limit?49.5:r1*100):(fiscaal>r.b2limit?49.5:fiscaal>r.b1limit?r.rate2*100:r1*100);
+
+  document.getElementById('netto-month').textContent=fmt(nettoM);
+  document.getElementById('m-netto-year').textContent=fmt(netto);
+  document.getElementById('m-effectief').textContent=fmtpct(eff);
+  document.getElementById('m-marginaal').textContent=fmtpct(marg);
+  document.getElementById('b-bruto').textContent=fmt(bruto);
+  document.getElementById('row-exfree').style.display=useExpat?'':'none';
+  document.getElementById('b-exfree').textContent=useExpat?fmt(expatFree)+' tax-free':'';
+  document.getElementById('b-fiscal').textContent=fmt(fiscaal);
+  document.getElementById('b-tax1').textContent='−'+fmt(t1);
+  document.getElementById('b-tax2').textContent='−'+fmt(t2);
+  document.getElementById('b-tax3').textContent='−'+fmt(t3);
+  document.getElementById('b-ahk').textContent='+'+fmt(ahk);
+  document.getElementById('b-ak').textContent='+'+fmt(ak);
+  document.getElementById('row-ok').style.display=aowAge&&ok>0?'':'none';
+  document.getElementById('b-ok').textContent='+'+fmt(ok);
+  document.getElementById('b-netto').textContent=fmt(netto);
+  document.getElementById('lbl-tax1').textContent='Income tax bracket 1 ('+(r1*100).toFixed(2)+'%)';
+  if(!r.twoSchijven){
+    document.getElementById('lbl-tax2').textContent='Income tax bracket 2 ('+(r.rate2*100).toFixed(2)+'%)';
+    document.getElementById('lbl-tax3').textContent='Income tax bracket 3 (49.50%)';
+    document.getElementById('row-tax3').style.display=fiscaal>r.b2limit?'':'none';
+  } else {
+    document.getElementById('lbl-tax2').textContent='Income tax bracket 2 (49.50%)';
+    document.getElementById('row-tax3').style.display='none';
+  }
+  document.getElementById('leg-exfree').style.display=useExpat?'flex':'none';
+
+  // bar: net (taxed portion) + tax-free portion + tax = 100% of bruto
+  const exPct=bruto>0?(expatFree/bruto)*100:0;
+  const txPct=bruto>0?(totalTax/bruto)*100:0;
+  const nPct=100-exPct-txPct;
+  document.getElementById('bar-netto').style.width=Math.max(0,nPct)+'%';
+  document.getElementById('bar-exfree').style.width=Math.max(0,exPct)+'%';
+  document.getElementById('bar-tax').style.width=Math.max(0,txPct)+'%';
+  document.getElementById('bar-pct-lbl').textContent=Math.round(100-txPct)+'% received';
+
+  if(prevNetto!==null){
+    const dY=Math.round(netto-prevNetto),dM=Math.round(nettoM-prevNettoM);
+    const eY=document.getElementById('diff-year'),eM=document.getElementById('diff-month');
+    if(dY!==0){const s=dY>0?'+':'';eY.textContent=s+dY.toLocaleString('nl-NL');eY.className='diff-pill '+(dY>0?'diff-up':'diff-dn');eY.style.display='inline-block';eM.textContent=s+dM.toLocaleString('nl-NL');eM.className='diff-pill '+(dY>0?'diff-up':'diff-dn');eM.style.display='inline-block';}
+    else{eY.style.display='none';eM.style.display='none';}
+  }
+  prevNetto=netto;prevNettoM=nettoM;
+}
+
+calculate();
+document.getElementById('salary').addEventListener('input',calculate);
+</script>
