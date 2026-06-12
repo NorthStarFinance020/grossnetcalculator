@@ -108,6 +108,10 @@
     .yr-btn.active { background: var(--blue); color: #fff; }
     .yr-btn:active { opacity: 0.85; }
 
+    .switch-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .lang-switch { display: inline-flex; border: 1.5px solid var(--border2); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; }
+    .lang-switch .yr-btn:first-child { border-right: 1px solid var(--border2); }
+
     .grid2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -382,83 +386,89 @@
       <div class="logo-icon">
         <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
       </div>
-      <h1>Gross → Net Salary Calculator</h1>
+      <h1 data-i18n="title_h1">Gross → Net Salary Calculator</h1>
     </div>
-    <p class="tagline">Netherlands · Income tax calculation for employees · 2025 &amp; 2026</p>
+    <p class="tagline" data-i18n="tagline">Netherlands · Income tax calculation for employees · 2025 &amp; 2026</p>
   </header>
 
-  <div class="year-switch">
-    <button class="yr-btn active" onclick="setYear(2025,this)">2025</button>
-    <button class="yr-btn" onclick="setYear(2026,this)">2026</button>
+  <div class="switch-row">
+    <div class="year-switch">
+      <button class="yr-btn active" onclick="setYear(2025,this)">2025</button>
+      <button class="yr-btn" onclick="setYear(2026,this)">2026</button>
+    </div>
+    <div class="lang-switch">
+      <button class="yr-btn active" data-lang="en" onclick="setLang('en',this)">EN</button>
+      <button class="yr-btn" data-lang="nl" onclick="setLang('nl',this)">NL</button>
+    </div>
   </div>
 
   <div class="grid2">
 
     <!-- INPUT CARD -->
     <div class="card">
-      <div class="section-title">Input</div>
+      <div class="section-title" data-i18n="input_title">Input</div>
 
       <div class="field">
-        <label>Gross salary</label>
+        <label data-i18n="lbl_salary">Gross salary</label>
         <div class="input-row">
           <input type="number" id="salary" placeholder="Enter gross salary…" min="0" max="9999999" step="100">
           <div class="toggle-row">
-            <button class="tog active" data-period="year" onclick="setPeriod('year',this)">Year</button>
-            <button class="tog" data-period="month" onclick="setPeriod('month',this)">Month</button>
+            <button class="tog active" data-period="year" onclick="setPeriod('year',this)" data-i18n="tog_year">Year</button>
+            <button class="tog" data-period="month" onclick="setPeriod('month',this)" data-i18n="tog_month">Month</button>
           </div>
         </div>
       </div>
 
       <div class="field">
-        <label>30% expat ruling</label>
+        <label data-i18n="lbl_expat">30% expat ruling</label>
         <div class="toggle-row">
-          <button class="tog" data-expat="1" onclick="setExpat(1,this)">Yes</button>
-          <button class="tog active" data-expat="0" onclick="setExpat(0,this)">No</button>
+          <button class="tog" data-expat="1" onclick="setExpat(1,this)" data-i18n="yes">Yes</button>
+          <button class="tog active" data-expat="0" onclick="setExpat(0,this)" data-i18n="no">No</button>
         </div>
         <div class="expat-panel" id="expat-panel">
           <div class="field" style="margin-bottom:8px">
-            <label>Under 30 with master's degree</label>
+            <label data-i18n="lbl_u30">Under 30 with master's degree</label>
             <div class="toggle-row">
-              <button class="tog" data-u30="1" onclick="setU30(1,this)">Yes</button>
-              <button class="tog active" data-u30="0" onclick="setU30(0,this)">No</button>
+              <button class="tog" data-u30="1" onclick="setU30(1,this)" data-i18n="yes">Yes</button>
+              <button class="tog active" data-u30="0" onclick="setU30(0,this)" data-i18n="no">No</button>
             </div>
           </div>
-          <div class="warn" id="warn-min">⚠ Salary may not meet the minimum threshold for the 30% ruling.</div>
-          <div class="warn" id="warn-wnt">⚠ Salary exceeds the WNT cap (€262,000). The 30% ruling does not apply above this amount.</div>
+          <div class="warn" id="warn-min" data-i18n="warn_min">⚠ Salary may not meet the minimum threshold for the 30% ruling.</div>
+          <div class="warn" id="warn-wnt" data-i18n="warn_wnt">⚠ Salary exceeds the WNT cap (€262,000). The 30% ruling does not apply above this amount.</div>
           <div class="expat-benefit">
             <span class="big" id="expat-saving">—</span>
-            <span class="sm">tax benefit / year</span>
+            <span class="sm" data-i18n="expat_benefit_label">tax benefit / year</span>
           </div>
-          <div class="expat-free-line">Tax-free amount: <span id="expat-free">—</span> / year</div>
+          <div class="expat-free-line"><span data-i18n="expat_free_prefix">Tax-free amount: </span><span id="expat-free">—</span><span data-i18n="expat_free_suffix"> / year</span></div>
         </div>
       </div>
 
       <div class="field">
-        <label>AOW state pension age reached</label>
+        <label data-i18n="lbl_aow">AOW state pension age reached</label>
         <div class="toggle-row">
-          <button class="tog" data-aow="1" onclick="setAOW(1,this)">Yes</button>
-          <button class="tog active" data-aow="0" onclick="setAOW(0,this)">No</button>
+          <button class="tog" data-aow="1" onclick="setAOW(1,this)" data-i18n="yes">Yes</button>
+          <button class="tog active" data-aow="0" onclick="setAOW(0,this)" data-i18n="no">No</button>
         </div>
       </div>
 
       <div class="field">
-        <label>Holiday allowance (8%) included in salary</label>
+        <label data-i18n="lbl_vg">Holiday allowance (8%) included in salary</label>
         <div class="toggle-row">
-          <button class="tog active" data-vg="1" onclick="setVG(1,this)">Yes</button>
-          <button class="tog" data-vg="0" onclick="setVG(0,this)">No (add 8%)</button>
+          <button class="tog active" data-vg="1" onclick="setVG(1,this)" data-i18n="yes">Yes</button>
+          <button class="tog" data-vg="0" onclick="setVG(0,this)" data-i18n="vg_no">No (add 8%)</button>
         </div>
       </div>
     </div>
 
     <!-- RESULT CARD -->
     <div class="card">
-      <div class="section-title">Result</div>
+      <div class="section-title" data-i18n="result_title">Result</div>
 
       <div id="empty-state" class="empty-state">
         <div class="empty-icon">
           <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="13" y2="15"/></svg>
         </div>
-        Enter a gross salary to see your take-home pay
+        <span data-i18n="empty_state">Enter a gross salary to see your take-home pay</span>
       </div>
 
       <div id="results" style="display:none">
@@ -466,7 +476,7 @@
         <div class="result-hero">
           <div class="result-num" id="r-net-month">—</div>
           <div class="result-lbl">
-            Net per month
+            <span data-i18n="net_per_month">Net per month</span>
             <span class="diff-pill" id="diff-month"></span>
           </div>
         </div>
@@ -474,34 +484,34 @@
         <div class="metrics">
           <div class="metric">
             <div class="val" id="r-net-year">—</div>
-            <div class="lbl">Net / year <span class="diff-pill" id="diff-year"></span></div>
+            <div class="lbl"><span data-i18n="net_per_year">Net / year</span> <span class="diff-pill" id="diff-year"></span></div>
           </div>
           <div class="metric">
             <div class="val" id="r-eff">—</div>
-            <div class="lbl">Effective rate</div>
+            <div class="lbl" data-i18n="eff_rate">Effective rate</div>
           </div>
           <div class="metric">
             <div class="val" id="r-marg">—</div>
-            <div class="lbl">Marginal rate</div>
+            <div class="lbl" data-i18n="marg_rate">Marginal rate</div>
           </div>
         </div>
 
         <div class="breakdown">
-          <div class="brow"><span class="bl">Gross salary</span><span class="bv" id="b-gross">—</span></div>
-          <div class="brow pos" id="row-free" style="display:none"><span class="bl">30% ruling — tax-free portion</span><span class="bv" id="b-free">—</span></div>
-          <div class="brow"><span class="bl">Taxable income</span><span class="bv" id="b-taxable">—</span></div>
+          <div class="brow"><span class="bl" data-i18n="b_gross">Gross salary</span><span class="bv" id="b-gross">—</span></div>
+          <div class="brow pos" id="row-free" style="display:none"><span class="bl" data-i18n="b_free_row">30% ruling — tax-free portion</span><span class="bv" id="b-free">—</span></div>
+          <div class="brow"><span class="bl" data-i18n="b_taxable">Taxable income</span><span class="bv" id="b-taxable">—</span></div>
           <div class="brow neg"><span class="bl" id="lbl-t1">Income tax bracket 1</span><span class="bv" id="b-t1">—</span></div>
           <div class="brow neg" id="row-t2"><span class="bl" id="lbl-t2">Income tax bracket 2</span><span class="bv" id="b-t2">—</span></div>
-          <div class="brow neg" id="row-t3" style="display:none"><span class="bl">Income tax bracket 3 (49.50%)</span><span class="bv" id="b-t3">—</span></div>
-          <div class="brow pos"><span class="bl">General tax credit</span><span class="bv" id="b-ahk">—</span></div>
-          <div class="brow pos"><span class="bl">Labour tax credit</span><span class="bv" id="b-ak">—</span></div>
-          <div class="brow pos" id="row-ok" style="display:none"><span class="bl">Elderly tax credit</span><span class="bv" id="b-ok">—</span></div>
-          <div class="brow total"><span class="bl">Net per year</span><span class="bv" id="b-net">—</span></div>
+          <div class="brow neg" id="row-t3" style="display:none"><span class="bl" data-i18n="t3_label">Income tax bracket 3 (49.50%)</span><span class="bv" id="b-t3">—</span></div>
+          <div class="brow pos"><span class="bl" data-i18n="b_ahk">General tax credit</span><span class="bv" id="b-ahk">—</span></div>
+          <div class="brow pos"><span class="bl" data-i18n="b_ak">Labour tax credit</span><span class="bv" id="b-ak">—</span></div>
+          <div class="brow pos" id="row-ok" style="display:none"><span class="bl" data-i18n="b_ok">Elderly tax credit</span><span class="bv" id="b-ok">—</span></div>
+          <div class="brow total"><span class="bl" data-i18n="b_net">Net per year</span><span class="bv" id="b-net">—</span></div>
         </div>
 
         <div class="bar-section">
           <div class="bar-header">
-            <span>Gross breakdown</span>
+            <span data-i18n="bar_gross_breakdown">Gross breakdown</span>
             <span id="bar-label"></span>
           </div>
           <div class="bar-track">
@@ -510,13 +520,13 @@
             <div class="seg seg-tax" id="bar-tax" style="width:0%"></div>
           </div>
           <div class="legend">
-            <div class="leg"><div class="leg-dot" style="background:#16a34a"></div>Net (taxed)</div>
-            <div class="leg" id="leg-free" style="display:none"><div class="leg-dot" style="background:#7c3aed"></div>30% tax-free</div>
-            <div class="leg"><div class="leg-dot" style="background:#dc2626"></div>Income tax</div>
+            <div class="leg"><div class="leg-dot" style="background:#16a34a"></div><span data-i18n="leg_net">Net (taxed)</span></div>
+            <div class="leg" id="leg-free" style="display:none"><div class="leg-dot" style="background:#7c3aed"></div><span data-i18n="leg_free">30% tax-free</span></div>
+            <div class="leg"><div class="leg-dot" style="background:#dc2626"></div><span data-i18n="leg_tax">Income tax</span></div>
           </div>
         </div>
 
-        <p class="note">
+        <p class="note" data-i18n="note">
           Tax credits (general, labour, elderly) are applied automatically based on income.
           ZVW healthcare contribution is paid by the employer and not deducted here.
           Excludes pension contributions, which vary by employer.
@@ -527,7 +537,7 @@
 
   </div><!-- /grid2 -->
 
-  <footer>
+  <footer data-i18n="footer">
     &copy; 2025 Northstar Finance &nbsp;·&nbsp; Rates sourced from Belastingdienst &amp; Rijksoverheid
   </footer>
 
@@ -553,8 +563,120 @@ const RATES = {
   }
 };
 
-let yr=2025, period='year', aow=0, vg=1, expat=0, u30=0;
+let yr=2025, period='year', aow=0, vg=1, expat=0, u30=0, lang='en';
 let prevNet=null, prevNetM=null;
+
+const I18N = {
+  en: {
+    title_h1: 'Gross → Net Salary Calculator',
+    tagline: 'Netherlands · Income tax calculation for employees · 2025 &amp; 2026',
+    input_title: 'Input',
+    lbl_salary: 'Gross salary',
+    ph_salary: 'Enter gross salary…',
+    tog_year: 'Year',
+    tog_month: 'Month',
+    lbl_expat: '30% expat ruling',
+    yes: 'Yes',
+    no: 'No',
+    lbl_u30: "Under 30 with master's degree",
+    warn_min: '⚠ Salary may not meet the minimum threshold for the 30% ruling.',
+    warn_wnt: '⚠ Salary exceeds the WNT cap (€262,000). The 30% ruling does not apply above this amount.',
+    expat_benefit_label: 'tax benefit / year',
+    expat_free_prefix: 'Tax-free amount: ',
+    expat_free_suffix: ' / year',
+    lbl_aow: 'AOW state pension age reached',
+    lbl_vg: 'Holiday allowance (8%) included in salary',
+    vg_no: 'No (add 8%)',
+    result_title: 'Result',
+    empty_state: 'Enter a gross salary to see your take-home pay',
+    net_per_month: 'Net per month',
+    net_per_year: 'Net / year',
+    eff_rate: 'Effective rate',
+    marg_rate: 'Marginal rate',
+    b_gross: 'Gross salary',
+    b_free_row: '30% ruling — tax-free portion',
+    b_taxable: 'Taxable income',
+    t1_base: 'Income tax bracket 1',
+    t2_two: 'Income tax bracket 2 (49.50%)',
+    t2_other: 'Income tax bracket 2',
+    t3_label: 'Income tax bracket 3 (49.50%)',
+    b_ahk: 'General tax credit',
+    b_ak: 'Labour tax credit',
+    b_ok: 'Elderly tax credit',
+    b_net: 'Net per year',
+    tax_free_suffix: ' tax-free',
+    bar_gross_breakdown: 'Gross breakdown',
+    received_suffix: '% received',
+    leg_net: 'Net (taxed)',
+    leg_free: '30% tax-free',
+    leg_tax: 'Income tax',
+    note: 'Tax credits (general, labour, elderly) are applied automatically based on income. ZVW healthcare contribution is paid by the employer and not deducted here. Excludes pension contributions, which vary by employer. <strong>Indicative only</strong> — consult a tax advisor for your personal situation.',
+    footer: '&copy; 2025 Northstar Finance &nbsp;·&nbsp; Rates sourced from Belastingdienst &amp; Rijksoverheid'
+  },
+  nl: {
+    title_h1: 'Bruto → Netto Salaris Calculator',
+    tagline: 'Nederland · Inkomstenbelasting berekening voor werknemers · 2025 &amp; 2026',
+    input_title: 'Invoer',
+    lbl_salary: 'Bruto salaris',
+    ph_salary: 'Voer bruto salaris in…',
+    tog_year: 'Jaar',
+    tog_month: 'Maand',
+    lbl_expat: '30%-regeling (expat)',
+    yes: 'Ja',
+    no: 'Nee',
+    lbl_u30: 'Onder de 30 jaar met masterdiploma',
+    warn_min: '⚠ Salaris voldoet mogelijk niet aan de minimumdrempel voor de 30%-regeling.',
+    warn_wnt: '⚠ Salaris overschrijdt de WNT-norm (€262.000). De 30%-regeling geldt niet boven dit bedrag.',
+    expat_benefit_label: 'belastingvoordeel / jaar',
+    expat_free_prefix: 'Belastingvrij bedrag: ',
+    expat_free_suffix: ' / jaar',
+    lbl_aow: 'AOW-leeftijd bereikt',
+    lbl_vg: 'Vakantiegeld (8%) inbegrepen in salaris',
+    vg_no: 'Nee (+8%)',
+    result_title: 'Resultaat',
+    empty_state: 'Voer een bruto salaris in om je nettoloon te zien',
+    net_per_month: 'Netto per maand',
+    net_per_year: 'Netto / jaar',
+    eff_rate: 'Effectief tarief',
+    marg_rate: 'Marginaal tarief',
+    b_gross: 'Bruto salaris',
+    b_free_row: '30%-regeling — belastingvrij deel',
+    b_taxable: 'Belastbaar inkomen',
+    t1_base: 'Inkomstenbelasting schijf 1',
+    t2_two: 'Inkomstenbelasting schijf 2 (49,50%)',
+    t2_other: 'Inkomstenbelasting schijf 2',
+    t3_label: 'Inkomstenbelasting schijf 3 (49,50%)',
+    b_ahk: 'Algemene heffingskorting',
+    b_ak: 'Arbeidskorting',
+    b_ok: 'Ouderenkorting',
+    b_net: 'Netto per jaar',
+    tax_free_suffix: ' belastingvrij',
+    bar_gross_breakdown: 'Bruto verdeling',
+    received_suffix: '% ontvangen',
+    leg_net: 'Netto (belast)',
+    leg_free: '30% belastingvrij',
+    leg_tax: 'Inkomstenbelasting',
+    note: 'Heffingskortingen (algemeen, arbeid, ouderen) worden automatisch toegepast op basis van het inkomen. De ZVW-bijdrage wordt door de werkgever betaald en hier niet ingehouden. Pensioenpremies, die per werkgever verschillen, zijn niet meegenomen. <strong>Alleen indicatief</strong> — raadpleeg een belastingadviseur voor jouw persoonlijke situatie.',
+    footer: '&copy; 2025 Northstar Finance &nbsp;·&nbsp; Tarieven afkomstig van Belastingdienst &amp; Rijksoverheid'
+  }
+};
+
+function applyLang() {
+  const t = I18N[lang];
+  document.querySelectorAll('[data-i18n]').forEach(elx => {
+    const key = elx.getAttribute('data-i18n');
+    if (t[key] !== undefined) elx.innerHTML = t[key];
+  });
+  el('salary').placeholder = t.ph_salary;
+  calc();
+}
+
+function setLang(l, btn) {
+  lang = l;
+  document.querySelectorAll('.lang-switch .yr-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  applyLang();
+}
 
 function setYear(y,el){yr=y;document.querySelectorAll('.yr-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');calc();}
 function setPeriod(p,el){period=p;document.querySelectorAll('[data-period]').forEach(b=>b.classList.toggle('active',b.dataset.period===p));calc();}
@@ -638,7 +760,7 @@ function calc() {
 
   el('b-gross').textContent   = fmt(gross);
   show('row-free', !!expat);
-  el('b-free').textContent    = expat ? fmt(free) + ' tax-free' : '';
+  el('b-free').textContent    = expat ? fmt(free) + I18N[lang].tax_free_suffix : '';
   el('b-taxable').textContent = fmt(fiscaal);
   el('b-t1').textContent      = '−' + fmt(t1);
   el('b-t2').textContent      = '−' + fmt(t2);
@@ -649,12 +771,12 @@ function calc() {
   el('b-ok').textContent      = '+' + fmt(c_ok);
   el('b-net').textContent     = fmt(net);
 
-  el('lbl-t1').textContent = 'Income tax bracket 1 (' + (r1 * 100).toFixed(2) + '%)';
+  el('lbl-t1').textContent = I18N[lang].t1_base + ' (' + (r1 * 100).toFixed(2) + '%)';
   if (!r.two) {
-    el('lbl-t2').textContent = 'Income tax bracket 2 (' + (r.r2 * 100).toFixed(2) + '%)';
+    el('lbl-t2').textContent = I18N[lang].t2_other + ' (' + (r.r2 * 100).toFixed(2) + '%)';
     show('row-t3', fiscaal > r.b2);
   } else {
-    el('lbl-t2').textContent = 'Income tax bracket 2 (49.50%)';
+    el('lbl-t2').textContent = I18N[lang].t2_two;
     show('row-t3', false);
   }
 
@@ -666,7 +788,7 @@ function calc() {
   el('bar-net').style.width  = Math.max(0, netPct)  + '%';
   el('bar-free').style.width = Math.max(0, freePct) + '%';
   el('bar-tax').style.width  = Math.max(0, taxPct)  + '%';
-  el('bar-label').textContent = Math.round(100 - taxPct) + '% received';
+  el('bar-label').textContent = Math.round(100 - taxPct) + I18N[lang].received_suffix;
 
   if (prevNet !== null) {
     const dY = Math.round(net - prevNet), dM = Math.round(netM - prevNetM);
@@ -687,7 +809,7 @@ function calc() {
 }
 
 document.getElementById('salary').addEventListener('input', calc);
-calc();
+applyLang();
 </script>
 </body>
 </html>
